@@ -20,7 +20,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	billRepository := repositories.BillRepository{DB: db}
+	billRepository := repositories.InitBillRepository(db)
 	router.InitBillRoute(app, billRepository)
 
 	err = app.Run("localhost:8080")

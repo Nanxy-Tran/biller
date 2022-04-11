@@ -3,7 +3,6 @@ package router
 import (
 	"biller/models"
 	"biller/repositories"
-	"biller/services"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,12 +12,19 @@ import (
 //	g.Get("/")
 //}
 
-func InitBillRoute(app *gin.Engine, repo repositories.BillRepository) {
+func InitBillRoute(app *gin.Engine, repo *repositories.BillRepository) {
 	app.GET("/bills", func(context *gin.Context) {
-		bills := services.GetBills(repo)
+		bills := repo.GetBills()
 		context.JSON(http.StatusOK, gin.H{
 			"data": bills.Result,
 		})
+	})
+
+	app.GET("bill/:id", func(context *gin.Context) {
+		id := context.Param("id")
+		bill := repo.GetBill(id)
+		context.JSON(http.StatusOK, gin.H{"data": bill.Result})
+		return
 	})
 
 	app.POST("/bill", func(context *gin.Context) {
@@ -30,12 +36,12 @@ func InitBillRoute(app *gin.Engine, repo repositories.BillRepository) {
 			return
 		}
 
-		result := services.CreateBill(&bill, repo)
+		result := repo.Save(&bill)
 
 		if result.Error != nil {
 			context.JSON(http.StatusBadRequest, gin.H{"error": result.Error})
 		} else {
-			context.JSON(http.StatusCreated, gin.H{"data": bill})
+			context.JSON(http.StatusCreated, gin.H{"data": result.Result})
 		}
 	})
 }

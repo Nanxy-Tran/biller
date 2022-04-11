@@ -30,3 +30,9 @@ func (r *BillRepository) GetBills() RepositoryResult {
 	r.DB.Find(&bills)
 	return RepositoryResult{Result: bills}
 }
+
+func (r *BillRepository) GetBill(id string) RepositoryResult {
+	var bill models.Bill
+	r.DB.First(&bill, id)
+	return RepositoryResult{Result: bill}
+}
