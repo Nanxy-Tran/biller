@@ -1,15 +1,29 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"biller/database"
+	"biller/models"
+	"biller/repositories"
+	"biller/router"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 	app := gin.Default()
 
-	app.GET("", func(context *gin.Context) {
-		context.JSON(200, gin.H{"message": "Hello"})
-	})
+	userName, password, dbName := "root", "admin", "biller"
 
-	err := app.Run("localhost:8080")
+	db := database.ConnectDB(userName, password, dbName)
+	err := db.AutoMigrate(&models.Bill{})
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	billRepository := repositories.BillRepository{DB: db}
+	router.InitBillRoute(app, billRepository)
+
+	err = app.Run("localhost:8080")
 	if err != nil {
 		panic(err.Error())
 	}
