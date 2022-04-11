@@ -10,10 +10,3 @@ type Bill struct {
 	Category    []Category `gorm:"NA" json:"category"`
 	Description string     `gorm:"default:description for good" json:"description"`
 }
-
-type Category struct {
-	gorm.Model
-	ID     uint16
-	Name   string
-	BillID uint
-}

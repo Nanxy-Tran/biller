@@ -14,7 +14,7 @@ func main() {
 	userName, password, dbName := "root", "admin", "biller"
 
 	db := database.ConnectDB(userName, password, dbName)
-	err := db.AutoMigrate(&models.Bill{})
+	err := db.AutoMigrate(&models.Bill{}, &models.Category{})
 
 	if err != nil {
 		panic(err.Error())
