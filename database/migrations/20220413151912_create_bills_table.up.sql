@@ -7,10 +7,3 @@ CREATE TABLE bills (
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        PRIMARY KEY (`id`)
 );
-
-INSERT INTO bills
-(name, amount, description)
-VALUES
-    ('Cafe Laviet', 45000, ''),
-    ('Cafe G', 35000, 'Buoi chieu toi')
-;

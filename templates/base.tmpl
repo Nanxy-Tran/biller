@@ -1,0 +1,27 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Biller</title>
+  <meta name="description" content="Biller for those loving money">
+  <meta name="nanxytran" content="biller">
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+    <h1> Biller for Nanxy's </h1>
+    <p> Total bill this month  </p>
+    {{ range .bills }}
+        <div>
+        ID:  {{ .ID }}
+        Name: {{ .Name }}
+        Amount: {{ .Amount }}
+        Description : {{ .Description }}
+        </div>
+    {{ end }}
+</body>

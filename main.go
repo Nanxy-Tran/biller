@@ -16,6 +16,7 @@ func main() {
 
 	billRepository := repositories.InitBillRepository(db)
 	router.InitBillRoute(app, billRepository)
+	router.InitBillPages(app, billRepository)
 
 	err := app.Run("localhost:8080")
 	if err != nil {
