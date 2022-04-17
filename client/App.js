@@ -1,5 +1,6 @@
 import React from "react";
 import {hot} from "react-hot-loader";
+import BillInput from "./components/BillInput";
 
 class App extends React.PureComponent {
     constructor(props) {
@@ -29,6 +30,7 @@ class App extends React.PureComponent {
                 </nav>
                 <BillGroup bills={this.state.bills} />
                 <TotalAmount totalAmount={this.state.totalAmount} />
+                <BillInput />
             </div>
         )
     }
@@ -78,21 +80,6 @@ class Bill extends React.PureComponent {
     }
 }
 
-// class BillInput extends React.Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             name: '',
-//             amount: 0,
-//             description: ''
-//         }
-//     }
-//     render() {
-//         return e('input', {className: ''})
-//     }
-//
-// }
-
 
 class TotalAmount extends React.PureComponent {
     constructor(props) {
@@ -112,16 +99,6 @@ const getBills = async () => {
         method: 'GET',
         mode: 'cors',
         headers: { 'Accept': 'application/json'},
-        referrerPolicy: 'no-referrer'
-    }).then(res => res.json())
-}
-
-const createBill = async (bill) => {
-    return await fetch("http://localhost:8080/api/bills", {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify(bill),
         referrerPolicy: 'no-referrer'
     }).then(res => res.json())
 }
