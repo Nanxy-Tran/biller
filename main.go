@@ -2,6 +2,7 @@ package main
 
 import (
 	"biller/database"
+	"biller/middleware"
 	"biller/repositories"
 	"biller/router"
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	app := gin.Default()
+	app.Use(middleware.CORSMiddleware)
 
 	userName, password, dbName := "root", "admin", "biller"
 

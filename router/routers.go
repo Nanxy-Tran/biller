@@ -59,5 +59,5 @@ func InitBillRoute(app *gin.Engine, repo *repositories.BillRepository) {
 func InitPageApp(app *gin.Engine) {
 	app.Static("/resource", "./resource")
 	app.StaticFile("/app.js", "./client/app.js")
-	app.StaticFile("/", "./client/base.html")
+	//app.StaticFile("/", "./client/base.html")
 }

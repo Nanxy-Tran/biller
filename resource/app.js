@@ -108,6 +108,3 @@ class TotalAmount extends React.PureComponent {
     }
 }
 
-const domContainer = document.querySelector('#client_app');
-const root = ReactDOM.createRoot(domContainer);
-root.render(e(App));
