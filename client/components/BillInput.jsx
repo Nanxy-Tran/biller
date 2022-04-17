@@ -33,16 +33,17 @@ class BillInput extends React.PureComponent {
     return errors.length < 1;
   };
 
-  submitBill = () => {
+  submitBill = async () => {
     const isValidBill = this.isValidBill();
     if (isValidBill) {
-      this.setState({});
+      await this.setState({ loading: true });
+      await createBill(this.state.bill);
+      await this.setState({ loading: false });
     }
   };
 
   render() {
     const { errors } = this.state;
-    console.log(errors.some((error) => error?.includes("name")));
     return (
       <div className="container">
         <button
@@ -58,7 +59,10 @@ class BillInput extends React.PureComponent {
 
         <div className="collapse" id="billInputForm">
           <div className="container p-3">
-            <label className="row">Name:</label>
+            <label className="d-block">
+              Name:
+              <ErrorIndicator errorKey="name" errors={errors} />
+            </label>
             <input
               className="form-control row border-gray border"
               type="text"
@@ -66,15 +70,16 @@ class BillInput extends React.PureComponent {
               placeholder="Cat food or chicken dinner...."
               onChange={this.updateBillValue("name")}
             />
-            <ErrorIndicator errorKey="name" errors={errors} />
 
-            <label className="row mt-2">Amount:</label>
+            <label className="mt-2 d-block">
+              Amount:
+              <ErrorIndicator errorKey="amount" errors={errors} />
+            </label>
             <input
               className="form-control row border-gray border"
               type="number"
               onChange={this.updateBillValue("amount")}
             />
-            <ErrorIndicator errorKey="amount" errors={errors} />
 
             <label className="row mt-2 ">Description:</label>
             <input
@@ -99,26 +104,22 @@ class BillInput extends React.PureComponent {
   }
 }
 
-const ErrorIndicator = ({errorKey, errors}) => {
-   const visible = errors.some(error => error?.includes(errorKey))
-    if(!visible) {
-        return null
-    }
-    return (
-            <span className="text-danger">
-                {`⛔ Invalid ${errorKey}`}
-            </span>
-    )
-}
+const ErrorIndicator = ({ errorKey, errors }) => {
+  const visible = errors.some((error) => error?.includes(errorKey));
+  if (!visible) {
+    return null;
+  }
+  return <span className="text-danger">{`  ⛔ Invalid ${errorKey}`}</span>;
+};
 
 const createBill = async (bill) => {
-    return await fetch("http://localhost:8080/api/bill", {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify(bill),
-        referrerPolicy: 'no-referrer'
-    }).then(res => res.json())
-}
+  return await fetch("http://localhost:8080/api/bill", {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bill),
+    referrerPolicy: "no-referrer",
+  }).then((res) => res.json());
+};
 
-export default BillInput
+export default BillInput;
