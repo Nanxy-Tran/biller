@@ -12,12 +12,16 @@ class App extends React.PureComponent {
         }
     }
 
-    async componentDidMount() {
+    getBills = async () => {
         const bills = await getBills()
         if (bills) {
             const totalAmount = bills.data.reduce((acc, cur) => cur.amount + acc, 0)
             this.setState({bills: bills.data, totalAmount})
         }
+    }
+
+    componentDidMount() {
+        this.getBills()
     }
 
     render() {
@@ -30,7 +34,7 @@ class App extends React.PureComponent {
                 </nav>
                 <BillGroup bills={this.state.bills} />
                 <TotalAmount totalAmount={this.state.totalAmount} />
-                <BillInput />
+                <BillInput onCreated={this.getBills} />
             </div>
         )
     }
@@ -73,7 +77,7 @@ class Bill extends React.PureComponent {
                     {formatCurrency(amount)}
                 </div>
                 <div className="col">
-                    {new Date(createdAt).toLocaleDateString(undefined, options)}
+                    {formatDate(new Date(createdAt))}
                 </div>
             </div>
         )
@@ -105,6 +109,10 @@ const getBills = async () => {
 
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(amount)
+}
+
+const formatDate = (date) => {
+   return new Intl.DateTimeFormat('vi-VN', {timeZone: "UTC",dateStyle: "full", timeStyle: "short"}).format(date)
 }
 
 export default hot(module)(App)

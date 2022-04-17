@@ -12,7 +12,7 @@ class BillInput extends React.PureComponent {
   };
 
   updateBillValue = (field) => (e) => {
-    this.setState({ bill: { [field]: e.target.value } });
+    this.setState({ bill: { ...this.state.bill, [field]: e.target.value } , errors: []});
   };
 
   isValidBill = () => {
@@ -24,26 +24,31 @@ class BillInput extends React.PureComponent {
         }
       }
 
-      if (!this.state[field]) {
+      if (this.state[field] === '') {
         errors.push(`${field}.invalid`);
       }
     });
 
     this.setState({ errors });
+    console.log(errors)
     return errors.length < 1;
   };
 
   submitBill = async () => {
+    const bill = this.state.bill;
     const isValidBill = this.isValidBill();
     if (isValidBill) {
-      await this.setState({ loading: true });
-      await createBill(this.state.bill);
-      await this.setState({ loading: false });
+      this.setState({ loading: true } );
+      const result = await createBill({...bill, amount: parseInt(bill.amount)});
+
+      if(result) this.props.onCreated()
+      this.setState({ loading: false });
     }
   };
 
   render() {
     const { errors } = this.state;
+    console.log(this.state)
     return (
       <div className="container">
         <button
@@ -116,7 +121,7 @@ const createBill = async (bill) => {
   return await fetch("http://localhost:8080/api/bill", {
     method: "POST",
     mode: "cors",
-    headers: { "Content-Type": "application/json" },
+    headers: { 'Accept': 'application/json'},
     body: JSON.stringify(bill),
     referrerPolicy: "no-referrer",
   }).then((res) => res.json());
