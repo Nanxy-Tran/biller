@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS bills;
-CREATE TABLE bills (
+CREATE TABLE IF NOT EXISTS bills (
                        id         INT AUTO_INCREMENT NOT NULL,
                        name      VARCHAR(128) NOT NULL,
                        amount     INTEGER NOT NULL,

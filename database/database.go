@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
-	"gorm.io/gorm"
 )
 
 func ConnectDB(userName string, password string, dbName string) (db *sql.DB) {
@@ -22,10 +21,4 @@ func ConnectDB(userName string, password string, dbName string) (db *sql.DB) {
 		panic(err.Error())
 	}
 	return db
-}
-
-func MigrateDB(db *gorm.DB) {
-	if err := db.AutoMigrate(); err != nil {
-		panic(err.Error())
-	}
 }
