@@ -35,7 +35,7 @@ func (r *UserRepository) Creat(user *models.User) RepositoryResult {
 	result, err := r.DB.Exec("INSERT INTO users (user_name, email, password) VALUE (?, ?, ?)", user.UserName, user.Email, password)
 
 	if err != nil {
-		return RepositoryResult{Error: &ApiError{e: "Something wrong with password"}}
+		return RepositoryResult{Error: &ApiError{e: "User already existed"}}
 	}
 
 	userId, err := result.LastInsertId()
