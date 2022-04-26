@@ -22,6 +22,7 @@ func main() {
 	router.InitPageApp(app)
 	router.InitBillRoute(app, billRepository)
 	router.InitUserRoute(app, userRepository)
+	router.InitAuthRoute(app, userRepository)
 
 	err := app.Run("localhost:8080")
 	if err != nil {

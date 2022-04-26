@@ -1,11 +1,14 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"biller/middleware"
+	"biller/repositories"
+	"github.com/gin-gonic/gin"
+)
 
-func InitAuthRoute(app *gin.Engine) {
-	app.POST("login")
-}
-
-func login(ctx *gin.Context) {
-
+func InitAuthRoute(app *gin.Engine, userRepo *repositories.UserRepository) {
+	api := app.Group("/api/")
+	{
+		api.POST("login", middleware.Login(userRepo))
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"biller/models"
 	"biller/services"
 	"database/sql"
+	"fmt"
 )
 
 type UserRepository struct {
@@ -16,11 +17,18 @@ func InitUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-func (r *UserRepository) Get(email string) RepositoryResult {
-	var user models.User
-	row := r.DB.QueryRow("SELECT 'user_name', 'password' from users where email = ?", email)
+//TODO: turn field to string[]
+func (r *UserRepository) getUserStatement(field string) (*sql.Stmt, error) {
+	return r.DB.Prepare(fmt.Sprintf("SELECT %s FROM users where email = ?", field))
+}
 
-	err := row.Scan(&user.UserName, &user.Email, &user.Password)
+func (r *UserRepository) Get(email string) RepositoryResult {
+	var user = new(models.User)
+	statement, _ := r.getUserStatement("user_name, password")
+	row := statement.QueryRow(email)
+
+	err := row.Scan(&user.UserName, &user.Password)
+
 	if err == sql.ErrNoRows {
 		return RepositoryResult{Error: &ApiError{e: "No user found for this email"}}
 	}
