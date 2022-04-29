@@ -20,7 +20,7 @@ const createBill = async (bill) => {
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(amount)
 }
-
+//TODO: delete
 class App extends React.Component {
     constructor(props) {
         super(props);

@@ -16,6 +16,8 @@ func InitBillRepository(db *sql.DB) *BillRepository {
 	}
 }
 
+//TODO: a Tuan dan viet lai
+
 func (r *BillRepository) Save(bill *models.Bill) RepositoryResult {
 	result, err := r.DB.Exec("INSERT INTO bills (name, amount, description) VALUE (?, ?, ?)", bill.Name, bill.Amount, bill.Description)
 	if err != nil {

@@ -22,7 +22,7 @@ func InitBillRoute(app *gin.Engine, repo *repositories.BillRepository) {
 				"data": bills.Result,
 			})
 		})
-
+		//TODO: a Fat dan viet controller
 		api.GET("bill/:id", func(context *gin.Context) {
 			id := context.Param("id")
 			bill := repo.GetBill(id)

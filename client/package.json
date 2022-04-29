@@ -15,11 +15,13 @@
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.2",
     "css-loader": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.29.4",
     "prettier": "2.6.2",
+    "prop-types": "^15.8.1",
     "react-hot-loader": "^4.13.0",
     "style-loader": "^0.23.0",
     "webpack": "^4.19.1",
@@ -28,6 +30,8 @@
   },
   "dependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "6"
   }
 }
