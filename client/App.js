@@ -1,7 +1,6 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import {BillsPage} from "./routes/BillsPage";
-import {BaseLayout} from "./components/BaseLayout";
 import {BrowserRouter} from "react-router-dom";
 import {Route, Routes} from "react-router";
 
@@ -35,4 +34,4 @@ class App extends React.PureComponent {
 }
 
 // eslint-disable-next-line no-undef
-export default hot(module)(App)
+export default App
