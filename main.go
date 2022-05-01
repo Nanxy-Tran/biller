@@ -21,7 +21,7 @@ func main() {
 
 	router.InitPageApp(app)
 	router.InitBillRoute(app, billRepository)
-	router.InitUserRoute(app, userRepository)
+	router.InitUserRoute(app, userRepository, middleware.AuthMiddleware())
 	router.InitAuthRoute(app, userRepository)
 
 	err := app.Run("localhost:8080")

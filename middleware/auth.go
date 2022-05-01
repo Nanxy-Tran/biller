@@ -68,5 +68,26 @@ func Login(r *repositories.UserRepository) func(ctx *gin.Context) {
 
 		ctx.JSON(http.StatusAccepted, gin.H{"token": tokenString})
 	}
+}
+
+func AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenString := c.Request.Header.Get("Authorization")
+		claims := &Claims{}
+		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+			return token, nil
+		})
+
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Action unauthorized"})
+			return
+		}
+
+		if !token.Valid {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+			return
+		}
+		c.Next()
+	}
 
 }

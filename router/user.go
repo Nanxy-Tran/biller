@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-func InitUserRoute(app *gin.Engine, repo *repositories.UserRepository) {
-	api := app.Group("/api/")
+func InitUserRoute(app *gin.Engine, repo *repositories.UserRepository, middleware gin.HandlerFunc) {
+	api := app.Group("/api/").Use(middleware)
 	{
 		api.GET("/user", func(context *gin.Context) {
 			var user models.User
