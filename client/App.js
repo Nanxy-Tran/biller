@@ -1,37 +1,49 @@
 import React from "react";
-import {hot} from "react-hot-loader";
-import {BillsPage} from "./routes/BillsPage";
-import {BrowserRouter} from "react-router-dom";
-import {Route, Routes} from "react-router";
+import { BrowserRouter } from "react-router-dom";
+import { Route, Routes } from "react-router";
+import { BaseLayout } from "./components/BaseLayout";
+import { LoginPage } from "./routes/LoginPage";
+import AuthRequired from "./feature/auth/AuthRequired";
+import { BillsPage } from "./routes/BillsPage";
 
-export const AppContext = React.createContext({});
+export const AppContext = React.createContext({ auth: {} });
 
 class App extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userName: "Nanxy-Tran",
-            bills : [],
-            totalAmount: 0
-        }
-    }
-    componentDidMount() {
-        console.log("I'm here dude !")
-    }
+  state = {
+    auth: {
+      username: undefined,
+      token: "",
+    },
+  };
 
-    render() {
-        return (
-            <AppContext.Provider value={{session: "fdjashfkdhak"}}>
-                <h1>F*ck the world</h1>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path={"/"} component={BillsPage} />
-                    </Routes>
-                </BrowserRouter>
-            </AppContext.Provider>
-        )
-    }
+  setRootState = (value, callback) => {
+    this.setState(value, callback);
+  };
+
+  render() {
+    return (
+      <AppContext.Provider
+        value={{ ...this.state, setRootState: this.setRootState }}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<BaseLayout />}>
+              <Route
+                path="/"
+                element={
+                  <AuthRequired>
+                    <BillsPage />
+                  </AuthRequired>
+                }
+              />
+              <Route path="/login" element={<LoginPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AppContext.Provider>
+    );
+  }
 }
 
 // eslint-disable-next-line no-undef
-export default App
+export default App;

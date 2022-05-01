@@ -1,28 +1,33 @@
 import BillInput from "../components/BillInput";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {BillGroup} from "../feature/bill/BillGroup";
-import {TotalAmount} from "../feature/bill/TotalAmount";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { BillGroup } from "../feature/bill/BillGroup";
+import { TotalAmount } from "../feature/bill/TotalAmount";
+import { getBills } from "../feature/bill/utils";
 
 export const BillsPage = () => {
-    const [bills, setBills] = useState([])
-    const totalAmount = useMemo(() => bills.data.reduce((acc, cur) => cur.amount + acc, 0) ,[bills])
+  const [bills, setBills] = useState([]);
 
-    const getBills = useCallback(async () => {
-        const response = await getBills()
-        if (bills) {
-            setBills(response)
-        }
-    }, [])
+  const totalAmount = useMemo(
+    () => bills.reduce((acc, cur) => cur.amount + acc, 0),
+    [bills]
+  );
 
-    useEffect(() => {
-        getBills()
-    }, [])
+  const fetchBills = useCallback(async () => {
+    const response = await getBills();
+    if (response) {
+      setBills(response);
+    }
+  }, []);
 
-    return (
-        <>
-            <BillGroup bills={this.state.bills} />
-            <TotalAmount totalAmount={totalAmount} />
-            <BillInput onCreated={getBills} />
-        </>
-    )
-}
+  useEffect(() => {
+    fetchBills();
+  }, []);
+
+  return (
+    <>
+      <BillGroup bills={bills} />
+      <TotalAmount totalAmount={totalAmount} />
+      <BillInput onCreated={fetchBills} />
+    </>
+  );
+};

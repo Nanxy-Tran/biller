@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+//TODO: replace when go private repo
 var jwtSecret = []byte("0A5456A8E91294BB5664BF0F2B08A016D70E88D8A226E2E828AAC175927EF9F2")
 
 type Credentials struct {
@@ -66,7 +67,7 @@ func Login(r *repositories.UserRepository) func(ctx *gin.Context) {
 			return
 		}
 
-		ctx.JSON(http.StatusAccepted, gin.H{"token": tokenString})
+		ctx.JSON(http.StatusAccepted, gin.H{"token": tokenString, "username": authUser.Result.(*models.User).UserName})
 	}
 }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import {formatCurrency} from "./utils";
 
 export class TotalAmount extends React.PureComponent {
     constructor(props) {
