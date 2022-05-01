@@ -1,6 +1,7 @@
 package router
 
 import (
+	"biller/middleware"
 	"biller/models"
 	"biller/repositories"
 	"database/sql"
@@ -14,7 +15,7 @@ import (
 //}
 
 func InitBillRoute(app *gin.Engine, repo *repositories.BillRepository) {
-	api := app.Group("/api/")
+	api := app.Group("/api/").Use(middleware.AuthMiddleware())
 	{
 		api.GET("/bills", func(context *gin.Context) {
 			bills := repo.GetBills()
@@ -22,6 +23,7 @@ func InitBillRoute(app *gin.Engine, repo *repositories.BillRepository) {
 				"data": bills.Result,
 			})
 		})
+
 		//TODO: a Fat dan viet controller
 		api.GET("bill/:id", func(context *gin.Context) {
 			id := context.Param("id")

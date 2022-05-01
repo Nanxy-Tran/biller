@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -24,6 +25,10 @@ type Claims struct {
 	Password []byte `json:"password"`
 	Email    string `json:"email"`
 	jwt.RegisteredClaims
+}
+
+type AuthHeader struct {
+	TokenID string `header:"Authorization"`
 }
 
 func Login(r *repositories.UserRepository) func(ctx *gin.Context) {
@@ -73,19 +78,31 @@ func Login(r *repositories.UserRepository) func(ctx *gin.Context) {
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := c.Request.Header.Get("Authorization")
-		claims := &Claims{}
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return token, nil
+		var header AuthHeader
+
+		if err := c.ShouldBindHeader(&header); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
+			c.Abort()
+		}
+
+		tokenString := strings.Split(header.TokenID, "Bearer ")
+		claims := Claims{}
+
+		fmt.Println(tokenString)
+
+		token, err := jwt.ParseWithClaims(tokenString[1], &claims, func(token *jwt.Token) (interface{}, error) {
+			return jwtSecret, nil
 		})
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Action unauthorized"})
+			err = c.AbortWithError(http.StatusUnauthorized, err)
 			return
 		}
 
 		if !token.Valid {
+			fmt.Println(err.Error())
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+			c.Abort()
 			return
 		}
 		c.Next()
