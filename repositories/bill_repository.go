@@ -17,20 +17,6 @@ func InitBillRepository(db *sql.DB) *BillRepository {
 	}
 }
 
-func (r *BillRepository) Save(bill *models.Bill) RepositoryResult {
-	result, err := r.DB.Exec("INSERT INTO bills (name, amount, description) VALUE (?, ?, ?)", bill.Name, bill.Amount, bill.Description)
-	if err != nil {
-		return RepositoryResult{Error: err}
-	}
-	_, err = result.LastInsertId()
-
-	if err != nil {
-		return RepositoryResult{Error: err}
-	}
-	return RepositoryResult{Result: result}
-
-}
-
 type BillsOptions struct {
 	Limit       int `form:"limit"`
 	CurrentPage int `form:"current_page"`
@@ -103,4 +89,18 @@ func (r *BillRepository) GetBill(id string) RepositoryResult {
 	}
 
 	return RepositoryResult{Result: bill}
+}
+
+func (r *BillRepository) Save(bill *models.Bill) RepositoryResult {
+	result, err := r.DB.Exec("INSERT INTO bills (name, amount, description) VALUE (?, ?, ?)", bill.Name, bill.Amount, bill.Description)
+	if err != nil {
+		return RepositoryResult{Error: err}
+	}
+	_, err = result.LastInsertId()
+
+	if err != nil {
+		return RepositoryResult{Error: err}
+	}
+	return RepositoryResult{Result: result}
+
 }

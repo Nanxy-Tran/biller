@@ -13,7 +13,7 @@ func InitBillRoute(app *gin.Engine, billRepository *repositories.BillRepository)
 	{
 		api.GET("/bills", billController.GetBills())
 		api.GET("bill/:id", billController.GetBill())
-		api.POST("/bill", billController.GetBill())
+		api.POST("/bill", billController.Save())
 	}
 }
 
