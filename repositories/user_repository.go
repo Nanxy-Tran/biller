@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"biller/models"
-	"biller/services"
+	"biller/utils"
 	"database/sql"
 	"fmt"
 )
@@ -17,7 +17,6 @@ func InitUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-//TODO: turn field to string[]
 func (r *UserRepository) getUserStatement(field string) (*sql.Stmt, error) {
 	return r.DB.Prepare(fmt.Sprintf("SELECT %s FROM users where email = ?", field))
 }
@@ -36,7 +35,7 @@ func (r *UserRepository) Get(email string) RepositoryResult {
 }
 
 func (r *UserRepository) Creat(user *models.User) RepositoryResult {
-	password, err := services.HashPassword(user.Password)
+	password, err := utils.HashPassword(user.Password)
 	if err != nil {
 		return RepositoryResult{Error: &ApiError{e: "Something wrong with password"}}
 	}

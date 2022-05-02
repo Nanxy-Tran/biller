@@ -20,13 +20,13 @@ func main() {
 
 	db := database.ConnectDB(userName, password, dbName)
 
-	billRepository := repositories.InitBillRepository(db)
-	userRepository := repositories.InitUserRepository(db)
+	userRepo := repositories.InitUserRepository(db)
+	billRepo := repositories.InitBillRepository(db)
 
 	router.InitPageApp(app)
-	router.InitBillRoute(app, billRepository)
-	router.InitUserRoute(app, userRepository, emptyMiddleware)
-	router.InitAuthRoute(app, userRepository)
+	router.InitBillRoute(app, billRepo)
+	router.InitUserRoute(app, userRepo, emptyMiddleware)
+	router.InitAuthRoute(app, userRepo)
 
 	err := app.Run("localhost:8080")
 	if err != nil {

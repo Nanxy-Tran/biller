@@ -1,12 +1,71 @@
 package services
 
-//func CreateBill(bill *models.Bill) repositories.RepositoryResult {
-//	repo := repositories.BillRepository{}
-//	result := repo.Save(bill)
-//	return result
-//}
-//
-//func GetBills(repo repositories.BillRepository) repositories.RepositoryResult {
-//	result := repo.GetBills()
-//	return result
-//}
+import (
+	"biller/models"
+	"biller/repositories"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+type BillController struct {
+	repository *repositories.BillRepository
+}
+
+func InitBillController(repo *repositories.BillRepository) *BillController {
+	return &BillController{
+		repository: repo,
+	}
+}
+
+func (controller *BillController) Save() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		bill := models.Bill{}
+		if err := context.ShouldBindJSON(&bill); err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		createdBill := controller.repository.Save(&bill)
+
+		if createdBill.Error != nil {
+			context.JSON(http.StatusBadRequest, gin.H{"error": createdBill.Error.Error()})
+		} else {
+			context.JSON(http.StatusCreated, gin.H{"bill_id": createdBill.Result})
+		}
+	}
+}
+
+func (controller *BillController) GetBills() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		var billsOptions repositories.BillsOptions
+
+		if err := context.ShouldBindQuery(&billsOptions); err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{"error": "Something wrong with pages !"})
+			return
+		}
+
+		bills := controller.repository.GetBills(&billsOptions)
+		context.JSON(http.StatusOK, gin.H{"data": bills})
+	}
+}
+
+func (controller *BillController) GetBill() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		billID := context.Param("id")
+
+		if billID == "" {
+			context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid params"})
+			return
+		}
+
+		billResult := controller.repository.GetBill(billID)
+
+		if billResult.Error != nil {
+			context.JSON(http.StatusNotFound, gin.H{"error": billResult.Error.Error()})
+			return
+		}
+
+		context.JSON(http.StatusOK, gin.H{"data": billResult.Result})
+
+	}
+}
