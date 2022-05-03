@@ -25,7 +25,7 @@ type BillsOptions struct {
 type BillsResponse struct {
 	CurrentPage int           `json:"current_page,omitempty"`
 	TotalPage   int           `json:"total_page,omitempty"`
-	Data        []models.Bill `json:"data,omitempty"`
+	Bills       []models.Bill `json:"bills,omitempty"`
 	Error       error         `json:"error,omitempty"`
 }
 
@@ -73,8 +73,9 @@ func (r *BillRepository) GetBills(options *BillsOptions) BillsResponse {
 	err = row.Scan(&totalBills)
 
 	return BillsResponse{
-		TotalPage: int(math.Ceil(float64(totalBills / options.Limit))),
-		Data:      bills, CurrentPage: options.CurrentPage,
+		TotalPage:   int(math.Ceil(float64(totalBills / options.Limit))),
+		CurrentPage: options.CurrentPage,
+		Bills:       bills,
 	}
 }
 

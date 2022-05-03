@@ -30,14 +30,20 @@ func AuthMiddleware() gin.HandlerFunc {
 		var header AuthHeader
 
 		if err := c.ShouldBindHeader(&header); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid token"})
 			c.Abort()
+			return
 		}
 
 		tokenString := strings.Split(header.TokenID, "Bearer ")
-		claims := Claims{}
 
-		fmt.Println(tokenString)
+		if len(tokenString) < 2 {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid header params"})
+			c.Abort()
+			return
+		}
+
+		claims := Claims{}
 
 		token, err := jwt.ParseWithClaims(tokenString[1], &claims, func(token *jwt.Token) (interface{}, error) {
 			return JwtSecret, nil

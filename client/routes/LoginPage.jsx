@@ -2,11 +2,13 @@ import React, { useCallback, useContext, useState } from "react";
 import { login } from "../feature/auth/utils";
 import { useLocation, useNavigate } from "react-router";
 import { AppContext } from "../App";
+import { Tokenizer } from "../feature/bill/utils";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const appContext = useContext(AppContext);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -20,6 +22,7 @@ export const LoginPage = () => {
   const handleLogin = useCallback(async () => {
     const response = await login(form);
     if (response) {
+      Tokenizer.setToken(response.token);
       appContext.setRootState({ auth: response }, () =>
         navigate(location?.state?.pathname || "/", { replace: true })
       );

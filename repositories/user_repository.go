@@ -39,7 +39,10 @@ func (r *UserRepository) Creat(user *models.User) RepositoryResult {
 	if err != nil {
 		return RepositoryResult{Error: &ApiError{e: "Something wrong with password"}}
 	}
-	result, err := r.DB.Exec("INSERT INTO users (username, email, password) VALUE (?, ?, ?)", user.UserName, user.Email, password)
+	result, err := r.DB.Exec(
+		"INSERT INTO users (username, email, password) VALUE (?, ?, ?)",
+		user.UserName, user.Email, password,
+	)
 
 	if err != nil {
 		return RepositoryResult{Error: &ApiError{e: "User already existed"}}

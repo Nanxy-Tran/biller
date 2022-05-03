@@ -37,7 +37,7 @@ func (controller *BillController) Save() gin.HandlerFunc {
 
 func (controller *BillController) GetBills() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		var billsOptions repositories.BillsOptions
+		billsOptions := repositories.BillsOptions{Limit: 10, CurrentPage: 1}
 
 		if err := context.ShouldBindQuery(&billsOptions); err != nil {
 			context.JSON(http.StatusBadRequest, gin.H{"error": "Something wrong with pages !"})
@@ -45,7 +45,7 @@ func (controller *BillController) GetBills() gin.HandlerFunc {
 		}
 
 		bills := controller.repository.GetBills(&billsOptions)
-		context.JSON(http.StatusOK, gin.H{"data": bills})
+		context.JSON(http.StatusOK, bills)
 	}
 }
 
