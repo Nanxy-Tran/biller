@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS bill_tags (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bill_id INT NOT NULL,
+    tag_id INT NOT NULL,
+
+    INDEX  (bill_id),
+    INDEX (tag_id),
+
+    CONSTRAINT fk_bill_id_bills FOREIGN KEY (bill_id)
+        REFERENCES bills(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    CONSTRAINT fk_tag_id_tags FOREIGN KEY (tag_id)
+        REFERENCES tags(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB
