@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS bills (
                        description   VARCHAR(255) DEFAULT 'description...',
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        PRIMARY KEY (`id`)
-);
+) ENGINE=INNODB;
