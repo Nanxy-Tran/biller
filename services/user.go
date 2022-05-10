@@ -3,6 +3,7 @@ package services
 import (
 	"biller/models"
 	"biller/repositories"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -37,6 +38,7 @@ func (controller *UserController) Get() gin.HandlerFunc {
 
 func (controller *UserController) Create() gin.HandlerFunc {
 	return func(context *gin.Context) {
+		fmt.Println("create new user")
 		var user models.User
 		if err := context.ShouldBindJSON(&user); err != nil {
 			context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

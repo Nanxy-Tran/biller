@@ -17,8 +17,12 @@ func InitTagRepository(db *gorm.DB) *TagRepository {
 }
 
 func (r *TagRepository) GetTags(userID uint) RepositoryResult {
-	result := r.DB.Where("user_id", userID).Or("user_id", "NULL").Find(&models.Tag{})
-	return RepositoryResult{Result: result}
+	var tags []models.Tag
+	result := r.DB.Where("user_id", userID).Or("user_id", "NULL").Find(&tags)
+	if result.Error != nil {
+		return RepositoryResult{Result: result.Error}
+	}
+	return RepositoryResult{Result: tags}
 }
 
 func (r *TagRepository) CreateTag(tag *models.Tag) RepositoryResult {

@@ -6,15 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitBillRoute(app *gin.Engine, billRepository *repositories.BillRepository) *gin.Engine {
+func InitBillRoute(app *gin.Engine, billRepository *repositories.BillRepository, middlewares gin.HandlerFunc) {
 	billController := services.InitBillController(billRepository)
-	api := app.Group("/api/")
+	api := app.Group("/api/").Use(middlewares)
 	{
 		api.GET("/bills", billController.GetBills())
 		api.GET("bill/:id", billController.GetBill())
 		api.POST("/bill", billController.Save())
 	}
-	return app
 }
 
 func InitPageApp(app *gin.Engine) {

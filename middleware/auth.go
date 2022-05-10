@@ -62,9 +62,11 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		result := db.First(&models.User{}).Where("email = ", claims.Email)
 
-		c.Set("user", result)
+		var user models.User
+		db.First(&user).Where("email = ?", claims.Email)
+
+		c.Set("user", user)
 		c.Next()
 	}
 

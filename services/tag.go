@@ -25,7 +25,7 @@ func (controller *TagController) GetTags() gin.HandlerFunc {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": "Internal error"})
 			return
 		}
-		result := controller.repository.GetTags(user.(*models.User).ID)
+		result := controller.repository.GetTags(user.(models.User).ID)
 		if result.Error != nil {
 			context.JSON(http.StatusBadGateway, gin.H{"error": "Can not get tags"})
 			return

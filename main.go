@@ -20,10 +20,13 @@ func main() {
 	billRepo := repositories.InitBillRepository(db)
 	tagRepo := repositories.InitTagRepository(db)
 
+	authMiddleware := middleware.AuthMiddleware(db)
+
 	router.InitPageApp(app)
-	router.InitBillRoute(app, billRepo).Use(middleware.AuthMiddleware(db))
-	router.InitUserRoute(app, userRepo).Use(middleware.AuthMiddleware(db))
-	router.InitTagRoutes(app, tagRepo).Use(middleware.AuthMiddleware(db))
+
+	router.InitBillRoute(app, billRepo, authMiddleware)
+	router.InitTagRoute(app, tagRepo, authMiddleware)
+	router.InitUserRoute(app, userRepo)
 	router.InitAuthRoute(app, userRepo)
 
 	err := app.Run("localhost:8080")

@@ -18,12 +18,13 @@ func InitUserRepository(db *gorm.DB) *UserRepository {
 }
 
 func (r *UserRepository) Get(email string) RepositoryResult {
-	result := r.DB.First(&models.User{}, "email = ?", email)
+	var user models.User
+	result := r.DB.First(&user, "email = ?", email)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return RepositoryResult{Error: &ApiError{e: "No user found for this email"}}
 	}
-	return RepositoryResult{Result: result}
+	return RepositoryResult{Result: user}
 }
 
 func (r *UserRepository) Creat(user *models.User) RepositoryResult {

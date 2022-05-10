@@ -6,12 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitTagRoutes(app *gin.Engine, tag *repositories.TagRepository) *gin.Engine {
+func InitTagRoute(app *gin.Engine, tag *repositories.TagRepository, middleware gin.HandlerFunc) {
 	tagController := services.InitTagController(tag)
-	api := app.Group("/api/")
+	api := app.Group("/api/").Use(middleware)
 	{
 		api.GET("/tags", tagController.GetTags())
 		api.POST("/tag", tagController.CreatTag())
 	}
-	return app
 }
