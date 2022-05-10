@@ -1,24 +1,25 @@
 package database
 
 import (
-	"database/sql"
-	"github.com/go-sql-driver/mysql"
+	"biller/models"
+	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func ConnectDB(userName string, password string, dbName string) (db *sql.DB) {
+func ConnectDB(userName string, password string, dbName string) (db *gorm.DB) {
+	dbDNS := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", userName, password, dbName)
+	db, err := gorm.Open(mysql.Open(dbDNS), &gorm.Config{})
 
-	dbConfig := mysql.Config{
-		User:      userName,
-		Passwd:    password,
-		Net:       "tcp",
-		Addr:      "127.0.0.1:3306",
-		DBName:    dbName,
-		ParseTime: true,
-	}
-
-	db, err := sql.Open("mysql", dbConfig.FormatDSN())
 	if err != nil {
 		panic(err.Error())
 	}
+
+	err = db.AutoMigrate(&models.User{}, &models.Bill{}, &models.Tag{})
+
+	if err != nil {
+		panic(err.Error())
+	}
+
 	return db
 }

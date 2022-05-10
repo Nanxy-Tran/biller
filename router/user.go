@@ -6,12 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitUserRoute(app *gin.Engine, userRepo *repositories.UserRepository, middleware gin.HandlerFunc) {
+func InitUserRoute(app *gin.Engine, userRepo *repositories.UserRepository) *gin.Engine {
 	userController := services.InitUserController(userRepo)
-	api := app.Group("/api/").Use(middleware)
+	api := app.Group("/api/")
 	{
 		api.GET("/user", userController.Get())
 		api.POST("/user", userController.Create())
 	}
-
+	return app
 }

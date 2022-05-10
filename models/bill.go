@@ -1,11 +1,10 @@
 package models
 
-import "time"
+import "gorm.io/gorm"
 
 type Bill struct {
-	ID          uint
-	Name        string    `json:"name"`
-	Amount      uint32    `json:"amount"`
-	Description string    `json:"description"`
-	CreatedAt   time.Time `json:"createdAt"`
+	gorm.Model
+	Name   string `json:"name" gorm:"not null"`
+	Amount uint32 `json:"amount"`
+	Tags   []*Tag `json:"tags" gorm:"many2many:bill_tags;"`
 }

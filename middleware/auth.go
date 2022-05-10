@@ -1,9 +1,11 @@
 package middleware
 
 import (
+	"biller/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"gorm.io/gorm"
 	"net/http"
 	"strings"
 )
@@ -25,7 +27,7 @@ type AuthHeader struct {
 	TokenID string `header:"Authorization"`
 }
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var header AuthHeader
 
@@ -60,6 +62,9 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		result := db.First(&models.User{}).Where("email = ", claims.Email)
+
+		c.Set("user", result)
 		c.Next()
 	}
 

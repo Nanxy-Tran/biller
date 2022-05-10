@@ -10,5 +10,6 @@ func InitAuthRoute(app *gin.Engine, userRepo *repositories.UserRepository) {
 	api := app.Group("/api/")
 	{
 		api.POST("login", services.Login(userRepo))
+		api.POST("refresh", services.RefreshToken())
 	}
 }
