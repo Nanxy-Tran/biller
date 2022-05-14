@@ -1,8 +1,7 @@
-import React, { useCallback, useContext, useState } from "react";
-import { login } from "../feature/auth/utils";
-import { useLocation, useNavigate } from "react-router";
-import { AppContext } from "../App";
-import { Tokenizer } from "../feature/bill/utils";
+import React, {useCallback, useContext, useState} from "react";
+import {useLocation, useNavigate} from "react-router";
+import {AppContext} from "../App";
+import {apiPost, Tokenizer} from "../api/apiInstance";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -15,12 +14,16 @@ export const LoginPage = () => {
   });
 
   const onInput = (field) => (e) => {
-    e.isDefaultPrevented();
+    e.preventDefault();
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleLogin = useCallback(async () => {
-    const response = await login(form);
+    const response = await apiPost("login", form);
+    if (response.error) {
+      appContext.setRootState({ apiError: response.error });
+    }
+
     if (response) {
       Tokenizer.setToken(response.token);
       appContext.setRootState({ auth: response }, () =>
@@ -64,6 +67,16 @@ export const LoginPage = () => {
           onClick={handleLogin}
         >
           Login
+        </button>
+      </div>
+
+      <div className="container row mt-4">
+        <button
+            className="btn btn-success rounded-pill col-6 mx-auto"
+            type="submit"
+            onClick={() => navigate("/signup")}
+        >
+          Signup
         </button>
       </div>
     </div>

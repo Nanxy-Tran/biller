@@ -2,9 +2,9 @@ import BillInput from "../components/BillInput";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { BillGroup } from "../feature/bill/BillGroup";
 import { TotalAmount } from "../feature/bill/TotalAmount";
-import { apiGet } from "../feature/bill/utils";
 import { usePagination } from "../hooks/usePagination";
 import { BillPaginationBar } from "../feature/bill/BillPaginationBar";
+import {apiGet} from "../api/apiInstance";
 
 export const BillsPage = () => {
   const { current_page, total_page, bills, setPayload } = usePagination({

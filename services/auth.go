@@ -29,7 +29,7 @@ func Login(r *repositories.UserRepository) gin.HandlerFunc {
 		var authUser = r.Get(credentials.Email)
 
 		if authUser.Error != nil || credentials.Valid() != nil {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized action"})
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid users credentials"})
 			return
 		}
 

@@ -15,7 +15,12 @@ func ConnectDB(userName string, password string, dbName string) (db *gorm.DB) {
 		panic(err.Error())
 	}
 
-	err = db.AutoMigrate(&models.User{}, &models.Bill{}, &models.Tag{})
+	err = db.AutoMigrate(
+		&models.User{},
+		&models.Bill{},
+		&models.Tag{},
+		&models.Category{},
+	)
 
 	if err != nil {
 		panic(err.Error())

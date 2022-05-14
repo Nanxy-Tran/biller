@@ -8,9 +8,9 @@ import PropsTypes from "prop-types";
 const AuthRequired = ({ children }) => {
   const { auth } = useContext(AppContext);
   const location = useLocation();
-  // if (!auth.token) {
-  //   return <Navigate to="/login" state={{ from: location }} replace />;
-  // }
+  if (!auth.token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
   return children;
 };
 

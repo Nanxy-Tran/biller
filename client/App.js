@@ -5,6 +5,7 @@ import { BaseLayout } from "./components/BaseLayout";
 import { LoginPage } from "./routes/LoginPage";
 import AuthRequired from "./feature/auth/AuthRequired";
 import { BillsPage } from "./routes/BillsPage";
+import {SignupPage} from "./routes/SignupPage";
 
 export const AppContext = React.createContext({ auth: {} });
 
@@ -14,6 +15,7 @@ class App extends React.PureComponent {
       username: undefined,
       token: "",
     },
+    apiError: "Yo Yo Yo what's up"
   };
 
   setRootState = (value, callback) => {
@@ -37,6 +39,7 @@ class App extends React.PureComponent {
                 }
               />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

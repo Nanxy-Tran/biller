@@ -9,7 +9,7 @@ export class BillGroup extends React.PureComponent {
     render() {
         return (
             <div className="container rounded border border-success">
-                {this.props.bills.map(bill => <Bill key={bill.ID}  {...bill} />)}
+                {this.props.bills.map(bill => <Bill key={bill.id}  {...bill} />)}
             </div>
         )
     }
