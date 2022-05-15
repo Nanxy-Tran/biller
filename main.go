@@ -8,12 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func emptyMiddleware() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		//DO NOT THING
-	}
-}
-
 func main() {
 	app := gin.Default()
 	app.Use(middleware.CORSMiddleware)
@@ -32,7 +26,7 @@ func main() {
 
 	router.InitBillRoute(app, billRepo, authMiddleware)
 	router.InitTagRoute(app, tagRepo, authMiddleware)
-	router.InitUserRoute(app, userRepo, authMiddleware)
+	router.InitUserRoute(app, userRepo)
 	router.InitAuthRoute(app, userRepo)
 
 	err := app.Run("localhost:8080")
