@@ -3,7 +3,6 @@ package main
 import (
 	"biller/database"
 	"biller/middleware"
-	"biller/repositories"
 	"biller/router"
 	"github.com/gin-gonic/gin"
 )
@@ -15,22 +14,26 @@ func main() {
 	userName, password, dbName := "root", "admin", "biller"
 
 	db := database.ConnectDB(userName, password, dbName)
+	injectedApp := database.InjectDB(app, db)
 
-	userRepo := repositories.InitUserRepository(db)
-	tagRepo := repositories.InitTagRepository(db)
+	//router.InitPageApp(app)
+	router.InitAuthRoute(injectedApp)
 
-	authMiddleware := middleware.AuthMiddleware()
-	getUserMiddleware := middleware.GetUserInfo(db)
+	injectedApp.Instance.Use(middleware.Authentication)
+	injectedApp.Instance.Use(middleware.Authorization(injectedApp.DB))
 
-	router.InitPageApp(app)
-
-	router.InitBillRoute(app, billRepo, authMiddleware)
-	router.InitTagRoute(app, tagRepo, authMiddleware)
-	router.InitUserRoute(app, userRepo, authMiddleware)
-	router.InitAuthRoute(app, userRepo)
+	router.InitBillRoute(injectedApp)
+	router.InitTagRoute(injectedApp)
 
 	err := app.Run("localhost:8080")
 	if err != nil {
 		panic(err.Error())
 	}
 }
+
+/**
+1. generic error
+2. utils helper
+3. tag tag tag & bill bill bill
+4. Feature honda dream
+*/

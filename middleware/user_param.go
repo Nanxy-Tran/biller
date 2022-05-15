@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func GetUserInfo(db *gorm.DB) gin.HandlerFunc {
+func Authorization(db *gorm.DB) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if claims, exist := context.Get("claims"); exist {
 			var user models.User

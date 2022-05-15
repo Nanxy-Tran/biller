@@ -25,44 +25,42 @@ type AuthHeader struct {
 	TokenID string `header:"Authorization"`
 }
 
-func AuthMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var header AuthHeader
+func Authentication(c *gin.Context) {
+	var header AuthHeader
 
-		if err := c.ShouldBindHeader(&header); err != nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid token"})
-			c.Abort()
-			return
-		}
-
-		tokenString := strings.Split(header.TokenID, "Bearer ")
-
-		if len(tokenString) < 2 {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid header params"})
-			c.Abort()
-			return
-		}
-
-		claims := Claims{}
-
-		token, err := jwt.ParseWithClaims(tokenString[1], &claims, func(token *jwt.Token) (interface{}, error) {
-			return JwtSecret, nil
-		})
-
-		if err != nil {
-			err = c.AbortWithError(http.StatusUnauthorized, err)
-			return
-		}
-
-		if !token.Valid {
-			fmt.Println(err.Error())
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
-			c.Abort()
-			return
-		}
-
-		c.Set("claims", claims)
-		c.Next()
+	if err := c.ShouldBindHeader(&header); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid token"})
+		c.Abort()
+		return
 	}
+
+	tokenString := strings.Split(header.TokenID, "Bearer ")
+
+	if len(tokenString) < 2 {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid header params"})
+		c.Abort()
+		return
+	}
+
+	claims := Claims{}
+
+	token, err := jwt.ParseWithClaims(tokenString[1], &claims, func(token *jwt.Token) (interface{}, error) {
+		return JwtSecret, nil
+	})
+
+	if err != nil {
+		err = c.AbortWithError(http.StatusUnauthorized, err)
+		return
+	}
+
+	if !token.Valid {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		c.Abort()
+		return
+	}
+
+	c.Set("claims", claims)
+	c.Next()
 
 }
