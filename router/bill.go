@@ -6,8 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitBillRoute(app *gin.Engine, billRepository *repositories.BillRepository, middlewares gin.HandlerFunc) {
-	billController := services.InitBillController(billRepository)
+func InitBillRoute(app *gin.Engine) {
+	billRepo := repositories.InitBillRepository(db)
+	billController := services.InitBillController(billRepo)
 	api := app.Group("/api/").Use(middlewares)
 	{
 		api.GET("/bills", billController.GetBills())

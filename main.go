@@ -17,16 +17,16 @@ func main() {
 	db := database.ConnectDB(userName, password, dbName)
 
 	userRepo := repositories.InitUserRepository(db)
-	billRepo := repositories.InitBillRepository(db)
 	tagRepo := repositories.InitTagRepository(db)
 
-	authMiddleware := middleware.AuthMiddleware(db)
+	authMiddleware := middleware.AuthMiddleware()
+	getUserMiddleware := middleware.GetUserInfo(db)
 
 	router.InitPageApp(app)
 
 	router.InitBillRoute(app, billRepo, authMiddleware)
 	router.InitTagRoute(app, tagRepo, authMiddleware)
-	router.InitUserRoute(app, userRepo)
+	router.InitUserRoute(app, userRepo, authMiddleware)
 	router.InitAuthRoute(app, userRepo)
 
 	err := app.Run("localhost:8080")
