@@ -4,11 +4,15 @@ import (
 	"biller/database"
 	"biller/middleware"
 	"biller/router"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"os"
 )
 
 func main() {
 	app := gin.Default()
+	env := os.Getenv("mode")
+	fmt.Println(env)
 	app.Use(middleware.CORSMiddleware)
 
 	userName, password, dbName := "root", "admin", "biller"

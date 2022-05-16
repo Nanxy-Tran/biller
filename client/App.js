@@ -6,6 +6,7 @@ import { LoginPage } from "./routes/LoginPage";
 import AuthRequired from "./feature/auth/AuthRequired";
 import { BillsPage } from "./routes/BillsPage";
 import {SignupPage} from "./routes/SignupPage";
+import {Carrier} from "./api/apiInstance";
 
 export const AppContext = React.createContext({ auth: {} });
 
@@ -17,6 +18,10 @@ class App extends React.PureComponent {
     },
     apiError: "Yo Yo Yo what's up"
   };
+
+  componentDidMount() {
+    Carrier.initErrorHandler((err) => this.setRootState({apiError: err}))
+  }
 
   setRootState = (value, callback) => {
     this.setState(value, callback);

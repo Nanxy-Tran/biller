@@ -4,7 +4,6 @@ import (
 	"biller/middleware"
 	"biller/models"
 	"biller/repositories"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -19,30 +18,31 @@ func IsPasswordMatched(comingPassword []byte, hashedPassword []byte) error {
 
 func Login(r *repositories.UserRepository) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var credentials middleware.Claims
-		err := json.NewDecoder(ctx.Request.Body).Decode(&credentials)
+		var user models.User
+		err := ctx.ShouldBindJSON(&user)
+
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid credentials"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		var authUser = r.Get(credentials.Email)
+		var authUser = r.Get(user.Email)
 
-		if authUser.Error != nil || credentials.Valid() != nil {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid users credentials"})
+		if authUser.Error != nil {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid users credentials"})
 			return
 		}
 
-		if err := IsPasswordMatched(credentials.Password, authUser.Result.(models.User).Password); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user credentials"})
+		if err := IsPasswordMatched(user.Password, authUser.Result.(models.User).Password); err != nil {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid user credentials"})
 			return
 		}
 
 		expirationTime := time.Now().Add(3 * time.Hour)
 
 		claim := &middleware.Claims{
-			Email:    credentials.Email,
-			Password: credentials.Password,
+			Email:    user.Email,
+			Password: user.Password,
 			RegisteredClaims: jwt.RegisteredClaims{
 				ExpiresAt: &jwt.NumericDate{Time: expirationTime},
 			},

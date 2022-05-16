@@ -27,38 +27,60 @@ const parseQuery = (param) =>
         "?"
     );
 
-const apiGet = (endpoint, param) => {
-    const url = BaseAPI + endpoint + parseQuery(param);
-    return fetch(url, {
-        method: "GET",
-        ...ApiConfig(),
-    }).then((res) => res.json());
-};
+//TODO: try to write in async / await with a curry onError dispatcher ?
+export const Carrier = (() => {
+    const handler = {
+        onSuccess: undefined,
+        onError: () => null,
+    }
 
-const apiPost =  (endpoint, body) => {
-    const url = BaseAPI + endpoint;
-    return fetch(url, {
-        ...ApiConfig(),
-        method: "POST",
-        body: JSON.stringify(body),
-    }).then((res) => res.json())
-}
+    const errorGuard = async (response) => {
+        if (!response.ok) {
+            response = await response.json()
+            let errorMessage = response?.error || "Unknown error"
+            return handler.onError(errorMessage)
+        }
+        return await response.json()
+    }
 
-const apiPut =  (endpoint, body) => {
-    const url = BaseAPI + endpoint;
-    return fetch(url, {
-        ...ApiConfig(),
-        method: "PUT",
-        body: JSON.stringify(body),
-    }).then((res) => res.json())
-}
+    const Get = async (endpoint, param) => {
+        const url = BaseAPI + endpoint + parseQuery(param);
+        const response = await fetch(url, {
+            method: "GET",
+            ...ApiConfig(),
+        })
+        return errorGuard(response)
 
-const apiDelete =  (endpoint, params) => {
-    const url = BaseAPI + endpoint + parseQuery(params);
-    return fetch(url, {
-        ...ApiConfig(),
-        method: "DELETE",
-    }).then((res) => res.json())
-}
+    };
 
-export {apiGet, apiPost, apiPut, apiDelete }
+    const Post = async (endpoint, body) => {
+        const url = BaseAPI + endpoint;
+        const response = await fetch(url, {
+            ...ApiConfig(),
+            method: "POST",
+            body: JSON.stringify(body),
+        })
+        return errorGuard(response)
+    }
+
+    const Put = (endpoint, body) => {
+        const url = BaseAPI + endpoint;
+        return fetch(url, {
+            ...ApiConfig(),
+            method: "PUT",
+            body: JSON.stringify(body),
+        }).then((res) => res.json())
+    }
+
+    const Delete = (endpoint, params) => {
+        const url = BaseAPI + endpoint + parseQuery(params);
+        return fetch(url, {
+            ...ApiConfig(),
+            method: "DELETE",
+        }).then((res) => res.json())
+    }
+
+    return {
+        Get, Post, Put, Delete, initErrorHandler: (fnc) => (handler.onError = fnc)
+    }
+})()
