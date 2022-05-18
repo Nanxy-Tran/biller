@@ -28,6 +28,7 @@ func main() {
 
 	router.InitBillRoute(injectedApp)
 	router.InitTagRoute(injectedApp)
+	router.InitCategoryRoute(injectedApp)
 
 	err := app.Run("localhost:8080")
 	if err != nil {
