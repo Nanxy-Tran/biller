@@ -20,7 +20,6 @@ func InitBillRoute(app *database.InjectDBApp, middlewares ...gin.HandlerFunc) {
 }
 
 func InitPageApp(app *gin.Engine) {
-	app.Static("/resource", "./resource")
-	app.StaticFile("/app.js", "./client/app.js")
-	//app.StaticFile("/", "./client/base.html")
+	app.Static("/dist", "./client/dist")
+	app.StaticFile("/", "./client/public/index.html")
 }

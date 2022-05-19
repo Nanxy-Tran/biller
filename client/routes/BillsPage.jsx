@@ -1,48 +1,46 @@
-import BillInput from "../components/BillInput";
-import React, { useCallback, useEffect, useMemo } from "react";
-import { BillGroup } from "../feature/bill/BillGroup";
-import { TotalAmount } from "../feature/bill/TotalAmount";
-import { usePagination } from "../hooks/usePagination";
-import { BillPaginationBar } from "../feature/bill/BillPaginationBar";
-import {apiGet} from "../api/apiInstance";
+import React, {lazy, useCallback, useEffect, useMemo} from "react";
 
-export const BillsPage = () => {
-  const { current_page, total_page, bills, setPayload } = usePagination({
-    bills: [],
-  });
+import {usePagination} from "../hooks/usePagination";
+import Carrier from "../api/apiInstance";
 
-  const totalAmount = useMemo(
-    () => bills.reduce((acc, cur) => cur.amount + acc, 0),
-    [bills]
-  );
+const BillGroup = lazy(() => import("../feature/bill/BillGroup"))
+const BillPaginationBar = lazy(() => import("../feature/bill/BillPaginationBar"))
+const BillInput = lazy(() => import("../components/BillInput"))
+const TotalAmount = lazy(() => import("../feature/bill/TotalAmount"))
 
-  const fetchBills = useCallback(async (pageIndex = 1) => {
-    const response = await apiGet("bills", {
-      limit: 10,
-      current_page: pageIndex,
+const BillsPage = () => {
+    const {current_page, total_page, bills, setPayload} = usePagination({
+        bills: [],
     });
-    if (response) setPayload(response);
-  }, []);
 
-  const fetchArbitraryPage = (pageIndex) => {
-    const availablePage = 0 < pageIndex <= total_page;
-    if (availablePage) fetchBills(pageIndex);
-  };
+    const totalAmount = useMemo(() => bills.reduce((acc, cur) => cur.amount + acc, 0), [bills]);
 
-  useEffect(() => {
-    fetchBills();
-  }, []);
+    const fetchBills = useCallback(async (pageIndex = 1) => {
+        const response = await Carrier.Get("bills", {
+            limit: 10, current_page: pageIndex,
+        });
+        if (response) setPayload(response);
+    }, []);
 
-  return (
-    <>
-      <BillGroup bills={bills} />
-      <BillPaginationBar
-        currentPage={current_page}
-        totalPage={total_page}
-        onSelectPage={fetchArbitraryPage}
-      />
-      <TotalAmount totalAmount={totalAmount} />
-      <BillInput onCreated={fetchBills} />
-    </>
-  );
+    const fetchArbitraryPage = (pageIndex) => {
+        const availablePage = 0 < pageIndex <= total_page;
+        if (availablePage) fetchBills(pageIndex);
+    };
+
+    useEffect(() => {
+        fetchBills();
+    }, []);
+
+    return (<>
+            <BillGroup bills={bills}/>
+            <BillPaginationBar
+                currentPage={current_page}
+                totalPage={total_page}
+                onSelectPage={fetchArbitraryPage}
+            />
+            <TotalAmount totalAmount={totalAmount}/>
+            <BillInput onCreated={fetchBills}/>
+        </>);
 };
+
+export default React.memo(BillsPage)

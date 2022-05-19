@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types"
 import {Bill} from "./Bill"
 
-export class BillGroup extends React.PureComponent {
+export default class BillGroup extends React.PureComponent {
     constructor(props) {
         super(props);
     }

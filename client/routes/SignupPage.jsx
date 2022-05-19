@@ -1,9 +1,9 @@
 import React, {useCallback, useContext, useState} from "react";
 import {useLocation, useNavigate} from "react-router";
 import {AppContext} from "../App";
-import {apiPost, Tokenizer} from "../api/apiInstance";
+import Carrier, {Tokenizer} from "../api/apiInstance";
 
-export const SignupPage = () => {
+const SignupPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const appContext = useContext(AppContext);
@@ -16,7 +16,7 @@ export const SignupPage = () => {
 
     const onInput = (field) => (e) => {
         e.isDefaultPrevented();
-        setForm((prev) => ({ ...prev, [field]: e.target.value }));
+        setForm((prev) => ({...prev, [field]: e.target.value}));
     };
 
     const handleRegister = useCallback(async () => {
@@ -25,11 +25,11 @@ export const SignupPage = () => {
             return
         }
 
-        const response = await apiPost('user', form);
+        const response = await Carrier.Post('user', form);
         if (response) {
             Tokenizer.setToken(response.token);
-            appContext.setRootState({ auth: response }, () =>
-                navigate(location?.state?.pathname || "/", { replace: true })
+            appContext.setRootState({auth: response}, () =>
+                navigate(location?.state?.pathname || "/", {replace: true})
             );
         }
     }, [form, navigate, appContext, location]);
@@ -84,3 +84,5 @@ export const SignupPage = () => {
         </div>
     );
 };
+
+export default React.memo(SignupPage)

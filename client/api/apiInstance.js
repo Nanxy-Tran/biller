@@ -27,8 +27,7 @@ const parseQuery = (param) =>
         "?"
     );
 
-//TODO: try to write in async / await with a curry onError dispatcher ?
-export const Carrier = (() => {
+const Carrier = (() => {
     const handler = {
         onSuccess: undefined,
         onError: () => null,
@@ -84,3 +83,5 @@ export const Carrier = (() => {
         Get, Post, Put, Delete, initErrorHandler: (fnc) => (handler.onError = fnc)
     }
 })()
+
+export default Carrier;

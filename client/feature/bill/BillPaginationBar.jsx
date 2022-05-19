@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 
-export const BillPaginationBar = ({
+const BillPaginationBar = ({
   currentPage = 1,
   totalPage = 1,
   onSelectPage,
@@ -42,3 +42,5 @@ const PaginationItem = ({ pageIndex, isActive, onSelect }) => {
     </li>
   );
 };
+
+export default React.memo(BillPaginationBar)

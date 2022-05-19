@@ -1,8 +1,12 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./index.js",
+  entry: {
+    index: "./index.js",
+  },
+
   mode: "development",
   module: {
     rules: [
@@ -21,18 +25,18 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
+
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",
-    filename: "bundle.js",
+    filename: "index.bundle.js",
   },
+
   devServer: {
-    // externals: {
-    //     react: 'react'
-    // },
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
     publicPath: "http://localhost:3000/dist/",
     hotOnly: false,
   },
+  plugins: [new HtmlWebpackPlugin()],
 };

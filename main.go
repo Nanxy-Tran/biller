@@ -20,7 +20,7 @@ func main() {
 	db := database.ConnectDB(userName, password, dbName)
 	injectedApp := database.InjectDB(app, db)
 
-	//router.InitPageApp(app)
+	router.InitPageApp(app)
 	router.InitAuthRoute(injectedApp)
 
 	injectedApp.Instance.Use(middleware.Authentication)

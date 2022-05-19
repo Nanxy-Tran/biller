@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "webpack-dev-server --mode development",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nanxy-tran",
@@ -24,11 +25,12 @@
     "prop-types": "^15.8.1",
     "react-hot-loader": "^4.13.0",
     "style-loader": "^0.23.0",
-    "webpack": "^4.19.1",
+    "webpack": "^5.72.1",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.8"
   },
   "dependencies": {
+    "html-webpack-plugin": "^5.5.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^6.3.0",

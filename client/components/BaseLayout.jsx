@@ -3,7 +3,7 @@ import React, {useContext} from "react";
 import {AppContext} from "../App";
 import Toast from "./Toast";
 
-export const BaseLayout = () => {
+const BaseLayout = () => {
     const {username, apiError} = useContext(AppContext);
     return (
         <>
@@ -21,3 +21,4 @@ export const BaseLayout = () => {
         </>
     );
 };
+export default React.memo(BaseLayout)
