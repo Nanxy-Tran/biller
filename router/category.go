@@ -1,19 +1,19 @@
 package router
 
 import (
+	"biller/controllers"
 	"biller/database"
 	"biller/repositories"
-	"biller/services"
 	"github.com/gin-gonic/gin"
 )
 
-func InitCategoryRoute(app *database.InjectDBApp, middlewares ...gin.HandlerFunc) {
-	billRepo := repositories.InitCategoryRepository(app.DB)
-	categoryController := services.InitCategoryController(billRepo)
+func InitCategoryRoute(app *gin.Engine) {
+	billRepo := repositories.InitCategoryRepository(database.Get())
+	categoryController := controllers.InitCategoryController(billRepo)
 
-	api := app.Instance.Group("/api/", middlewares...)
+	api := app.Group("/api/")
 	{
-		api.GET("/category", categoryController.GetCategories())
-		api.POST("/category", categoryController.CreateCategory())
+		api.GET("/category", categoryController.GetCategories)
+		api.POST("/category", categoryController.CreateCategory)
 	}
 }

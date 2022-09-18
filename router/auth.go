@@ -1,18 +1,18 @@
 package router
 
 import (
+	"biller/controllers"
 	"biller/database"
 	"biller/repositories"
-	"biller/services"
+	"github.com/gin-gonic/gin"
 )
 
-func InitAuthRoute(app *database.InjectDBApp) {
-	userRepo := repositories.InitUserRepository(app.DB)
-	userController := services.InitUserController(userRepo)
-	api := app.Instance.Group("/api/")
+func InitAuthRoute(app *gin.Engine) {
+	userController := controllers.InitUserController(repositories.InitUserRepository(database.Get()))
+	api := app.Group("/api/")
 	{
-		api.POST("refresh", services.RefreshToken())
-		api.POST("login", services.Login(userRepo))
+		api.POST("refresh", controllers.RefreshToken)
+		api.POST("login", controllers.Login)
 		api.POST("user", userController.Create())
 	}
 }

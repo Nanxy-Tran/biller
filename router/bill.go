@@ -1,21 +1,21 @@
 package router
 
 import (
+	"biller/controllers"
 	"biller/database"
 	"biller/repositories"
-	"biller/services"
 	"github.com/gin-gonic/gin"
 )
 
-func InitBillRoute(app *database.InjectDBApp, middlewares ...gin.HandlerFunc) {
-	billRepo := repositories.InitBillRepository(app.DB)
-	billController := services.InitBillController(billRepo)
+func InitBillRoute(app *gin.Engine, middlewares ...gin.HandlerFunc) {
+	billRepo := repositories.InitBillRepository(database.Get())
+	billController := controllers.InitBillController(billRepo)
 
-	api := app.Instance.Group("/api/", middlewares...)
+	api := app.Group("/api/", middlewares...).Use(middlewares...)
 	{
-		api.GET("/bills", billController.GetBills())
-		api.GET("bill/:id", billController.GetBill())
-		api.POST("/bill", billController.Save())
+		api.GET("/bills", billController.GetBills)
+		api.GET("bill/:id", billController.GetBill)
+		api.POST("/bill", billController.Save)
 	}
 }
 
